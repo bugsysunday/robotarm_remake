@@ -56,7 +56,7 @@ PFont fontinput = createFont("arial",14);
   cp5.enableShortcuts();
   frameRate(60);
   myTextarea = cp5.addTextarea("txt")
-                  .setPosition(220, 540)
+                  .setPosition(175, 75)
                   .setSize(210, 200)
                   .setFont(createFont("", 10))
                   .setLineHeight(14)
@@ -82,9 +82,9 @@ PFont fontinput = createFont("arial",14);
   cp5.addButton("set4s").setPosition(60,120).setLabel("save").setSize(40,20).setVisible(true);   
   cp5.addButton("set4l").setPosition(100,120).setLabel("load").setSize(40,20).setVisible(true);
   */
-  cp5.addSlider("ground").setRange(154,40).setValue(ground).setNumberOfTickMarks(180).setPosition(55,380).setSize(490,20).getTriggerEvent();  
-  cp5.addButton("setground").setPosition(30,380).setSize(20,20).setLabel("OK").setOn().setId(1);    
-  cp5.addTextfield("groundinput").setPosition(5, 380).setLabel("ground").setSize(20, 20).setFont(fontinput);
+  cp5.addSlider("ground").setRange(154,40).setValue(ground).setNumberOfTickMarks(180).setPosition(55,375).setSize(490,20).getTriggerEvent();  
+  cp5.addButton("setground").setPosition(30,375).setSize(20,20).setLabel("OK").setOn().setId(1);    
+  cp5.addTextfield("groundinput").setPosition(5, 375).setLabel("ground").setSize(20, 20).setFont(fontinput);
 
   cp5.addSlider("sec").setRange(180,23).setValue(sec).setPosition(100,85).setSize(20,200).getTriggerEvent(); 
   cp5.addTextfield("secinput").setPosition(100, 290).setLabel("").setSize(20, 20).setFont(fontinput);
@@ -107,7 +107,7 @@ PFont fontinput = createFont("arial",14);
   cp5.addButton("setclaw").setPosition(550,270).setSize(30,20).setLabel("OK").setOn().setId(6);
  
   cp5.addSlider("smomov").setRange(0,100).setLabel("smooth steps").setValue(smomov).setPosition(140,0).setSize(255, 20).getTriggerEvent();     
-  cp5.addButton("setall").setPosition(120,700).setSize(60,20).setLabel("update all").setOn().setId(7); 
+  cp5.addButton("setall").setPosition(5,380).setSize(60,20).setLabel("update all").setOn().setId(7); 
      addMouseWheelListener();
      arduino = new Arduino(this, Arduino.list()[1], 57600);
 
