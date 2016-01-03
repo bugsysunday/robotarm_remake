@@ -6,11 +6,16 @@
  * www.sojamo.de/libraries/controlP5
  *
  */
-
+import processing.serial.*;
+import static javax.swing.JOptionPane.*;
 import controlP5.*;
 import cc.arduino.*;
 import processing.serial.*;
 boolean start =false;
+final boolean debug = true;
+
+Serial myPort;        // The serial port
+
 ControlP5 cp5;
 
 Arduino arduino; 
@@ -48,7 +53,9 @@ int parkabove=90;
 int parktop =90;
 int parkclaw = 96;
 void setup() {  
-  size(600,800);
+  size(600,400);
+String COMx, COMlist = "";
+
 println(Arduino.list());
 PFont fontinput = createFont("arial",14);
   noStroke();
@@ -107,10 +114,43 @@ PFont fontinput = createFont("arial",14);
   cp5.addButton("setclaw").setPosition(550,270).setSize(30,20).setLabel("OK").setOn().setId(6);
  
   cp5.addSlider("smomov").setRange(0,100).setLabel("smooth steps").setValue(smomov).setPosition(140,0).setSize(255, 20).getTriggerEvent();     
-  cp5.addButton("setall").setPosition(5,380).setSize(60,20).setLabel("update all").setOn().setId(7); 
+  cp5.addButton("setall").setPosition(5,350).setSize(60,20).setLabel("update all").setOn().setId(7); 
      addMouseWheelListener();
-     arduino = new Arduino(this, Arduino.list()[1], 57600);
-
+     
+       try {
+    if(debug) printArray(Serial.list());
+    int i = Arduino.list().length;
+    if (i != 0) {
+      if (i >= 2) {
+        // need to check which port the inst uses -
+        // for now we'll just let the user decide
+        for (int j = 0; j < i;) {
+          COMlist += char(j+'a') + " = " + Serial.list()[j];
+          if (++j < i) COMlist += ",  ";
+        }
+        COMx = showInputDialog("Which COM port is correct? (a,b,..):\n"+COMlist);
+        if (COMx == null) exit();
+        if (COMx.isEmpty()) exit();
+        i = int(COMx.toLowerCase().charAt(0) - 'a') + 1;
+      }
+      String portName = Arduino.list()[i-1];
+      if(debug) println(portName);
+      arduino = new Arduino(this, portName, 57600); // change baud rate to your liking
+    // arduino.bufferUntil('\n'); // buffer until CR/LF appears, but not required..
+    }
+    else {
+      showMessageDialog(frame,"Device is not connected to the PC");
+      exit();
+    }
+  }
+  catch (Exception e)
+  { //Print the type of error
+    showMessageDialog(frame,"COM port is not available (may\nbe in use by another program)");
+    println("Error:", e);
+    exit();
+  }
+  
+ //    arduino = new Arduino(this, Arduino.list()[1], 57600);
 //   arduino = new Arduino(this, "COM4", 57600);
 // arduino = new Arduino(this, Arduino.list()[0], 57600);
  // arduino = new Arduino(this, "/dev/tty.usbmodem1421", 57600);
@@ -120,7 +160,8 @@ PFont fontinput = createFont("arial",14);
       arduino.pinMode(8,  Arduino.SERVO); //above
       arduino.pinMode(9,  Arduino.SERVO); //top
       arduino.pinMode(4,  Arduino.SERVO); //claw
-   }
+   
+ }
 
 void controlEvent(ControlEvent theEvent) {
   switch(theEvent.getController().getId()) {
