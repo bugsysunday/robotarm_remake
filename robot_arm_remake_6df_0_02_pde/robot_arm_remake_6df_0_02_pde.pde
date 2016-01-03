@@ -606,11 +606,17 @@ public void setmov ()
 if(true==cp5.getController("smomov").isVisible())
    {
       cp5.getController("smomov").setVisible(false);
+            cp5.getController("sec").setVisible(true);
+      cp5.getController("tec").setVisible(true);
+
    }
 else
     {
     cp5.getController("smomov").setVisible(true);
-    }
+      cp5.getController("sec").setVisible(false);
+      cp5.getController("tec").setVisible(false);
+
+  }
 println("Smooth steps changed to " +smomov);
 }
 
@@ -620,13 +626,16 @@ if(true==cp5.getController("set1s").isVisible())
    {
       cp5.getController("set1s").setVisible(false);
       cp5.getController("set1l").setVisible(false);
-       cp5.getController("sec").setVisible(true);
+      cp5.getController("sec").setVisible(true);
+      cp5.getController("tec").setVisible(true);
+
    }
 else
     {
     cp5.getController("set1s").setVisible(true);
     cp5.getController("set1l").setVisible(true);
-           cp5.getController("sec").setVisible(false);
+      cp5.getController("sec").setVisible(false);
+      cp5.getController("tec").setVisible(false);
 
     }
 println("SET1 loaded \n" + "ground: "+s1ground+"sec: "+s1sec+ "tec: "+s1tec+ "above: "+s1above+ "top: "+s1top+"claw: "+s1claw );
