@@ -74,47 +74,50 @@ PFont fontinput = createFont("arial",14);
 
   console = cp5.addConsole(myTextarea);
   cp5.addButton("getpos").setLabel("?").setPosition(60,20).setSize(32,32).update();  
-  cp5.addButton("PARK").setPosition(20,20).setSize(32,32);
-  cp5.addButton("parksave").setPosition(20,10).setSize(32,10).setLabel("S");
- /* cp5.addButton("set1").setPosition(20,60).setLabel("SET1").setSize(40,20);
-  cp5.addButton("set1s").setPosition(60,60).setLabel("save").setSize(40,20).setVisible(true);  
-  cp5.addButton("set1l").setPosition(100,60).setLabel("load").setSize(40,20).setVisible(true);  
-  cp5.addButton("set2").setPosition(20,80).setLabel("SET2").setSize(40,20);
-  cp5.addButton("set2s").setPosition(60,80).setLabel("save").setSize(40,20).setVisible(true);
-  cp5.addButton("set2l").setPosition(100,80).setLabel("load").setSize(40,20).setVisible(true);   
-  cp5.addButton("set3").setPosition(20,100).setLabel("SET3").setSize(40,20);
-  cp5.addButton("set3s").setPosition(60,100).setLabel("save").setSize(40,20).setVisible(true);
-  cp5.addButton("set3l").setPosition(100,100).setLabel("load").setSize(40,20).setVisible(true);
-  cp5.addButton("set4").setPosition(20,120).setLabel("set4").setSize(40,20);
-  cp5.addButton("set4s").setPosition(60,120).setLabel("save").setSize(40,20).setVisible(true);   
-  cp5.addButton("set4l").setPosition(100,120).setLabel("load").setSize(40,20).setVisible(true);
-  */
-  cp5.addSlider("ground").setRange(154,40).setValue(ground).setNumberOfTickMarks(180).setPosition(55,375).setSize(490,20).getTriggerEvent();  
-  cp5.addButton("setground").setPosition(30,375).setSize(20,20).setLabel("OK").setOn().setId(1);    
-  cp5.addTextfield("groundinput").setPosition(5, 375).setLabel("ground").setSize(20, 20).setFont(fontinput);
+  cp5.addButton("PARK").setPosition(5,20).setSize(32,32);
+  cp5.addButton("parksave").setPosition(5,10).setSize(32,10).setLabel("S");
+  cp5.addButton("set1").setPosition(5,90).setLabel("SET1").setSize(40,20);
+  cp5.addButton("set1s").setPosition(45,90).setLabel("save").setSize(40,20).setVisible(false);  
+  cp5.addButton("set1l").setPosition(85,90).setLabel("load").setSize(40,20).setVisible(false);  
+  cp5.addButton("set2").setPosition(5,110).setLabel("SET2").setSize(40,20);
+  cp5.addButton("set2s").setPosition(45,110).setLabel("save").setSize(40,20).setVisible(false);
+  cp5.addButton("set2l").setPosition(85,110).setLabel("load").setSize(40,20).setVisible(false);   
+  cp5.addButton("set3").setPosition(5,130).setLabel("SET3").setSize(40,20);
+  cp5.addButton("set3s").setPosition(45,130).setLabel("save").setSize(40,20).setVisible(false);
+  cp5.addButton("set3l").setPosition(85,130).setLabel("load").setSize(40,20).setVisible(false);
+  cp5.addButton("set4").setPosition(5,150).setLabel("set4").setSize(40,20);
+  cp5.addButton("set4s").setPosition(45,150).setLabel("save").setSize(40,20).setVisible(false);   
+  cp5.addButton("set4l").setPosition(85,150).setLabel("load").setSize(40,20).setVisible(false);
 
-  cp5.addSlider("sec").setRange(180,23).setValue(sec).setPosition(100,85).setSize(20,200).getTriggerEvent(); 
-  cp5.addTextfield("secinput").setPosition(100, 290).setLabel("").setSize(20, 20).setFont(fontinput);
-  cp5.addButton("setsec").setPosition(100,315).setSize(20,20).setLabel("OK").setOn().setId(2);
+  cp5.addButton("setmov").setPosition(5,60).setLabel("setmove").setSize(40,30);
+  cp5.addSlider("smomov").setRange(0,100).setLabel("smooth steps").setValue(smomov).setPosition(45,60).setSize(255, 30).setVisible(false).getTriggerEvent();    
+
+  
+  cp5.addSlider("ground").setRange(154,40).setValue(ground).setNumberOfTickMarks(180).setPosition(55,365).setSize(490,30).getTriggerEvent();  
+  cp5.addButton("setground").setPosition(30,365).setSize(20,30).setLabel("OK").setOn().setId(1);    
+  cp5.addTextfield("groundinput").setPosition(5, 365).setLabel("ground").setSize(20, 30).setFont(fontinput);
+
+  cp5.addSlider("sec").setRange(180,23).setValue(sec).setPosition(70,85).setLabel("").setSize(30,200).getTriggerEvent(); 
+  cp5.addTextfield("secinput").setPosition(70, 300).setLabel("SEC").setSize(30, 30).setFont(fontinput);
+  cp5.addButton("setsec").setPosition(70,335).setSize(30,30).setLabel("OK").setOn().setId(2);
  
-  cp5.addSlider("tec").setRange(23,180).setValue(tec).setPosition(140,75).setSize(20,200).getTriggerEvent();  
-  cp5.addTextfield("tecinput").setLabel("").setPosition(140,280).setSize(20, 20).setFont(fontinput);
-  cp5.addButton("settec").setPosition(140,305).setSize(20,20).setLabel("OK").setOn().setId(3);
+  cp5.addSlider("tec").setRange(23,180).setValue(tec).setPosition(130,75).setSize(30,200).getTriggerEvent();  
+  cp5.addTextfield("tecinput").setLabel("").setPosition(130,290).setSize(30, 30).setFont(fontinput);
+  cp5.addButton("settec").setPosition(130,325).setSize(30,30).setLabel("OK").setOn().setId(3);
  
-  cp5.addSlider("above").setRange(150,8).setValue(above).setPosition(180,50).setSize(300,20).getTriggerEvent() ; 
-  cp5.addTextfield("aboveinput").setPosition(110,50).setLabel("").setSize(30, 20).setFont(fontinput);
-  cp5.addButton("setabove").setPosition(145,50).setSize(30,20).setLabel("OK").setOn().setId(4);
+  cp5.addSlider("above").setRange(150,8).setValue(above).setPosition(180,30).setSize(300,20).getTriggerEvent() ; 
+  cp5.addTextfield("aboveinput").setPosition(145,30).setLabel("").setSize(30, 20).setFont(fontinput);
+  cp5.addButton("setabove").setPosition(110,30).setSize(30,20).setLabel("OK").setOn().setId(4);
  
-  cp5.addSlider("top").setRange(165,10).setValue(top).setPosition(285,25).setSize(295,20).getTriggerEvent(); 
-  cp5.addTextfield("topinput").setPosition(215, 25).setSize(30, 20).setLabel("").setFont(fontinput);
-  cp5.addButton("setop").setPosition(250,25).setSize(30,20).setLabel("OK").setOn().setId(5);
+  cp5.addSlider("top").setRange(165,10).setValue(top).setPosition(285,5).setSize(295,30).getTriggerEvent(); 
+  cp5.addTextfield("topinput").setPosition(250, 5).setSize(30, 30).setLabel("").setFont(fontinput);
+  cp5.addButton("setop").setPosition(215,5).setSize(30,30).setLabel("OK").setOn().setId(5);
  
-  cp5.addSlider("claw").setRange(96,150).setValue(claw).setPosition(550,55).setSize(30,180).getTriggerEvent();  
-  cp5.addTextfield("clawinput").setPosition(550, 245).setSize(30, 20).setLabel("").setFont(fontinput);
-  cp5.addButton("setclaw").setPosition(550,270).setSize(30,20).setLabel("OK").setOn().setId(6);
+  cp5.addSlider("claw").setRange(96,150).setValue(claw).setPosition(550,120).setSize(30,180).getTriggerEvent();  
+  cp5.addTextfield("clawinput").setPosition(550, 305).setSize(30, 30).setLabel("").setFont(fontinput);
+  cp5.addButton("setclaw").setPosition(550,340).setSize(30,30).setLabel("OK").setOn().setId(6);
  
-  cp5.addSlider("smomov").setRange(0,100).setLabel("smooth steps").setValue(smomov).setPosition(140,0).setSize(255, 20).getTriggerEvent();     
-  cp5.addButton("setall").setPosition(5,350).setSize(60,20).setLabel("update all").setOn().setId(7); 
+  cp5.addButton("setall").setPosition(5,330).setSize(60,30).setLabel("update all").setOn().setId(7); 
      addMouseWheelListener();
      
        try {
@@ -593,6 +596,18 @@ delay(1000);
 claw =parkclaw;
 cp5.getController("claw").setUpdate(true);
 cp5.getController("claw").setValue(claw);
+}
+public void setmov ()
+{
+if(true==cp5.getController("smomov").isVisible())
+   {
+      cp5.getController("smomov").setVisible(false);
+   }
+else
+    {
+    cp5.getController("smomov").setVisible(true);
+    }
+println("Smooth steps changed to " +smomov);
 }
 
 public void set1 ()
