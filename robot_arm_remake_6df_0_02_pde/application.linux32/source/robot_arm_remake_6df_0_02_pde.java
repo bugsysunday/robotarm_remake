@@ -3,6 +3,7 @@ import processing.data.*;
 import processing.event.*; 
 import processing.opengl.*; 
 
+import static javax.swing.JOptionPane.*; 
 import controlP5.*; 
 import cc.arduino.*; 
 import processing.serial.*; 
@@ -31,6 +32,10 @@ public class robot_arm_remake_6df_0_02_pde extends PApplet {
 
 
 boolean start =false;
+final boolean debug = true;
+
+Serial myPort;        // The serial port
+
 ControlP5 cp5;
 
 Arduino arduino; 
@@ -41,7 +46,7 @@ Textarea myTextarea;
 String groundinput, secinput, tecinput, aboveinput, topinput, clawinput, smoothinput;
 
 int myColorBackground = color(0,0,0);
-
+int visabove =30;
 //move smooth
 int smomov=15;
 int ground =90;
@@ -69,68 +74,110 @@ int parktop =90;
 int parkclaw = 96;
 public void setup() {  
   
+String COMx, COMlist = "";
+
 println(Arduino.list());
 PFont fontinput = createFont("arial",14);
   noStroke();
   cp5 = new ControlP5(this);
   cp5.enableShortcuts();
-  frameRate(60);
+  frameRate(10);
   myTextarea = cp5.addTextarea("txt")
-                  .setPosition(220, 540)
-                  .setSize(210, 200)
+                  .setPosition(175, 75)
+                  .setSize(210, 210)
                   .setFont(createFont("", 10))
                   .setLineHeight(14)
                   .setColor(color(200))
                   .setColorBackground(color(0, 100))
                   .setColorForeground(color(255, 100));
-  ;
-
+                 
   console = cp5.addConsole(myTextarea);
-  cp5.addButton("getpos").setLabel("?").setPosition(60,20).setSize(32,32).update();  
-  cp5.addButton("PARK").setPosition(20,20).setSize(32,32);
-  cp5.addButton("parksave").setPosition(20,10).setSize(32,10).setLabel("S");
- /* cp5.addButton("set1").setPosition(20,60).setLabel("SET1").setSize(40,20);
-  cp5.addButton("set1s").setPosition(60,60).setLabel("save").setSize(40,20).setVisible(true);  
-  cp5.addButton("set1l").setPosition(100,60).setLabel("load").setSize(40,20).setVisible(true);  
-  cp5.addButton("set2").setPosition(20,80).setLabel("SET2").setSize(40,20);
-  cp5.addButton("set2s").setPosition(60,80).setLabel("save").setSize(40,20).setVisible(true);
-  cp5.addButton("set2l").setPosition(100,80).setLabel("load").setSize(40,20).setVisible(true);   
-  cp5.addButton("set3").setPosition(20,100).setLabel("SET3").setSize(40,20);
-  cp5.addButton("set3s").setPosition(60,100).setLabel("save").setSize(40,20).setVisible(true);
-  cp5.addButton("set3l").setPosition(100,100).setLabel("load").setSize(40,20).setVisible(true);
-  cp5.addButton("set4").setPosition(20,120).setLabel("set4").setSize(40,20);
-  cp5.addButton("set4s").setPosition(60,120).setLabel("save").setSize(40,20).setVisible(true);   
-  cp5.addButton("set4l").setPosition(100,120).setLabel("load").setSize(40,20).setVisible(true);
-  */
-  cp5.addSlider("ground").setRange(154,40).setValue(ground).setNumberOfTickMarks(180).setPosition(55,380).setSize(490,20).getTriggerEvent();  
-  cp5.addButton("setground").setPosition(30,380).setSize(20,20).setLabel("OK").setOn().setId(1);    
-  cp5.addTextfield("groundinput").setPosition(5, 380).setLabel("ground").setSize(20, 20).setFont(fontinput);
+  
+  
 
-  cp5.addSlider("sec").setRange(180,23).setValue(sec).setPosition(100,85).setSize(20,200).getTriggerEvent(); 
-  cp5.addTextfield("secinput").setPosition(100, 290).setLabel("").setSize(20, 20).setFont(fontinput);
-  cp5.addButton("setsec").setPosition(100,315).setSize(20,20).setLabel("OK").setOn().setId(2);
+
+  cp5.addButton("getpos").setLabel("GET POS").setPosition(5,295).setSize(40,30).update();  
+  cp5.addButton("con").setPosition(5,225).setSize(40,30);
+  cp5.addButton("PARK").setPosition(5,260).setSize(40,30);
+  cp5.addButton("parksave").setPosition(5,10).setSize(32,10).setLabel("S");
+  cp5.addButton("set1").setPosition(5,90).setLabel("SET1").setSize(40,20);
+  cp5.addButton("set1s").setPosition(45,90).setLabel("save").setSize(40,20).setVisible(false);  
+  cp5.addButton("set1l").setPosition(85,90).setLabel("load").setSize(40,20).setVisible(false);  
+  cp5.addButton("set2").setPosition(5,110).setLabel("SET2").setSize(40,20);
+  cp5.addButton("set2s").setPosition(45,110).setLabel("save").setSize(40,20).setVisible(false);
+  cp5.addButton("set2l").setPosition(85,110).setLabel("load").setSize(40,20).setVisible(false);   
+  cp5.addButton("set3").setPosition(5,130).setLabel("SET3").setSize(40,20);
+  cp5.addButton("set3s").setPosition(45,130).setLabel("save").setSize(40,20).setVisible(false);
+  cp5.addButton("set3l").setPosition(85,130).setLabel("load").setSize(40,20).setVisible(false);
+  cp5.addButton("set4").setPosition(5,150).setLabel("set4").setSize(40,20);
+  cp5.addButton("set4s").setPosition(45,150).setLabel("save").setSize(40,20).setVisible(false);   
+  cp5.addButton("set4l").setPosition(85,150).setLabel("load").setSize(40,20).setVisible(false);
+
+  cp5.addButton("setmov").setPosition(5,60).setLabel("setmove").setSize(40,30);
+  cp5.addSlider("smomov").setRange(0,100).setLabel("smooth steps").setValue(smomov).setPosition(45,60).setSize(100, 30).setVisible(false).getTriggerEvent();    
+
+  
+  cp5.addSlider("ground").setRange(154,40).setValue(ground).setNumberOfTickMarks(180).setPosition(75,365).setSize(470,30).getTriggerEvent();  
+  cp5.addButton("setground").setPosition(5,365).setSize(30,30).setLabel("OK").setOn().setId(1);    
+  cp5.addTextfield("groundinput").setPosition(40, 365).setLabel("ground").setSize(30, 30).setFont(fontinput);
+
+  cp5.addSlider("sec").setRange(180,23).setValue(sec).setPosition(50,85).setSize(30,195).setVisible(true).getTriggerEvent(); 
+  cp5.addTextfield("secinput").setPosition(50, 295).setLabel("").setSize(30, 30).setFont(fontinput);
+  cp5.addButton("setsec").setPosition(50,330).setSize(30,30).setLabel("OK").setOn().setId(2);
  
-  cp5.addSlider("tec").setRange(23,180).setValue(tec).setPosition(140,75).setSize(20,200).getTriggerEvent();  
-  cp5.addTextfield("tecinput").setLabel("").setPosition(140,280).setSize(20, 20).setFont(fontinput);
-  cp5.addButton("settec").setPosition(140,305).setSize(20,20).setLabel("OK").setOn().setId(3);
+  cp5.addSlider("tec").setRange(23,180).setValue(tec).setPosition(100,75).setSize(30,200).setVisible(true).getTriggerEvent();  
+  cp5.addTextfield("tecinput").setLabel("").setPosition(100,290).setSize(30, 30).setFont(fontinput);
+  cp5.addButton("settec").setPosition(100,325).setSize(30,30).setLabel("OK").setOn().setId(3);
  
-  cp5.addSlider("above").setRange(150,8).setValue(above).setPosition(180,50).setSize(300,20).getTriggerEvent() ; 
-  cp5.addTextfield("aboveinput").setPosition(110,50).setLabel("").setSize(30, 20).setFont(fontinput);
-  cp5.addButton("setabove").setPosition(145,50).setSize(30,20).setLabel("OK").setOn().setId(4);
+  cp5.addSlider("above").setRange(150,8).setValue(above).setPosition(245,40).setSize(300,30).getTriggerEvent() ; 
+  cp5.addTextfield("aboveinput").setPosition(210,40).setLabel("").setSize(30, 30).setFont(fontinput);
+  cp5.addButton("setabove").setPosition(175,40).setSize(30,30).setLabel("OK").setOn().setId(4);
  
-  cp5.addSlider("top").setRange(165,10).setValue(top).setPosition(285,25).setSize(295,20).getTriggerEvent(); 
-  cp5.addTextfield("topinput").setPosition(215, 25).setSize(30, 20).setLabel("").setFont(fontinput);
-  cp5.addButton("setop").setPosition(250,25).setSize(30,20).setLabel("OK").setOn().setId(5);
+  cp5.addSlider("top").setRange(165,10).setValue(top).setPosition(285,5).setSize(295,30).getTriggerEvent(); 
+  cp5.addTextfield("topinput").setPosition(250, 5).setSize(30, 30).setLabel("").setFont(fontinput);
+  cp5.addButton("setop").setPosition(215,5).setSize(30,30).setLabel("OK").setOn().setId(5);
  
-  cp5.addSlider("claw").setRange(96,150).setValue(claw).setPosition(550,55).setSize(30,180).getTriggerEvent();  
-  cp5.addTextfield("clawinput").setPosition(550, 245).setSize(30, 20).setLabel("").setFont(fontinput);
-  cp5.addButton("setclaw").setPosition(550,270).setSize(30,20).setLabel("OK").setOn().setId(6);
+  cp5.addSlider("claw").setRange(96,150).setValue(claw).setPosition(550,110).setSize(30,180).getTriggerEvent();  
+  cp5.addTextfield("clawinput").setPosition(550, 305).setSize(30, 30).setLabel("").setFont(fontinput);
+  cp5.addButton("setclaw").setPosition(550,340).setSize(30,30).setLabel("OK").setOn().setId(6);
  
-  cp5.addSlider("smomov").setRange(0,100).setLabel("smooth steps").setValue(smomov).setPosition(140,0).setSize(255, 20).getTriggerEvent();     
-  cp5.addButton("setall").setPosition(120,700).setSize(60,20).setLabel("update all").setOn().setId(7); 
+  cp5.addButton("setall").setPosition(5,330).setSize(40,30).setLabel("OK all").setOn().setId(7); 
      addMouseWheelListener();
-     arduino = new Arduino(this, Arduino.list()[1], 57600);
-
+     
+       try {
+    if(debug) printArray(Serial.list());
+    int i = Arduino.list().length;
+    if (i != 0) {
+      if (i >= 2) {
+        // need to check which port the inst uses -
+        // for now we'll just let the user decide
+        for (int j = 0; j < i;) {
+          COMlist += PApplet.parseChar(j+'a') + " = " + Serial.list()[j];
+          if (++j < i) COMlist += ",  ";
+        }
+        COMx = showInputDialog("Which COM port is correct? (a,b,..):\n"+COMlist);
+        if (COMx == null) exit();
+        if (COMx.isEmpty()) exit();
+        i = PApplet.parseInt(COMx.toLowerCase().charAt(0) - 'a') + 1;
+      }
+      String portName = Arduino.list()[i-1];
+      if(debug) println(portName);
+      arduino = new Arduino(this, portName, 57600); // change baud rate to your liking
+    // arduino.bufferUntil('\n'); // buffer until CR/LF appears, but not required..
+    }
+    else {
+      showMessageDialog(frame,"Device is not connected to the PC");
+      exit();
+    }
+  }
+  catch (Exception e)
+  { //Print the type of error
+    showMessageDialog(frame,"COM port is not available (may\nbe in use by another program)");
+    println("Error:", e);
+    exit();
+  }
+  
+ //    arduino = new Arduino(this, Arduino.list()[1], 57600);
 //   arduino = new Arduino(this, "COM4", 57600);
 // arduino = new Arduino(this, Arduino.list()[0], 57600);
  // arduino = new Arduino(this, "/dev/tty.usbmodem1421", 57600);
@@ -140,7 +187,8 @@ PFont fontinput = createFont("arial",14);
       arduino.pinMode(8,  Arduino.SERVO); //above
       arduino.pinMode(9,  Arduino.SERVO); //top
       arduino.pinMode(4,  Arduino.SERVO); //claw
-   }
+   
+ }
 
 public void controlEvent(ControlEvent theEvent) {
   switch(theEvent.getController().getId()) {
@@ -574,17 +622,46 @@ cp5.getController("claw").setUpdate(true);
 cp5.getController("claw").setValue(claw);
 }
 
+public void setmov ()
+{
+if(true==cp5.getController("smomov").isVisible())
+   {
+      cp5.getController("smomov").setVisible(false);
+            cp5.getController("sec").setVisible(true);
+      cp5.getController("tec").setVisible(true);
+ 
+ 
+ 
+   }
+else
+    {
+    cp5.getController("smomov").setVisible(true);
+    cp5.getController("sec").setVisible(false);
+    cp5.getController("tec").setVisible(false);
+   
+ 
+
+  }
+println("Smooth steps changed to " +smomov);
+}
+
 public void set1 ()
 {
 if(true==cp5.getController("set1s").isVisible())
    {
       cp5.getController("set1s").setVisible(false);
       cp5.getController("set1l").setVisible(false);
+      cp5.getController("sec").setVisible(true);
+      cp5.getController("tec").setVisible(true);
+
    }
 else
     {
     cp5.getController("set1s").setVisible(true);
     cp5.getController("set1l").setVisible(true);
+      cp5.getController("sec").setVisible(false);
+      cp5.getController("tec").setVisible(false);
+
     }
 println("SET1 loaded \n" + "ground: "+s1ground+"sec: "+s1sec+ "tec: "+s1tec+ "above: "+s1above+ "top: "+s1top+"claw: "+s1claw );
 }
@@ -627,12 +704,19 @@ if(true==cp5.getController("set2s").isVisible())
    {
       cp5.getController("set2s").setVisible(false);
       cp5.getController("set2l").setVisible(false);
+      cp5.getController("sec").setVisible(true);
+      cp5.getController("tec").setVisible(true);
+
+
    }
 else
     {
       cp5.getController("set2s").setVisible(true);
       cp5.getController("set2l").setVisible(true);
-    }  
+      cp5.getController("sec").setVisible(false);
+      cp5.getController("tec").setVisible(false);
+  
+  }  
 }
 public void set2s ()
 {
@@ -673,12 +757,17 @@ public void set3 ()
    {
       cp5.getController("set3s").setVisible(false);
       cp5.getController("set3l").setVisible(false);
+      cp5.getController("sec").setVisible(true);
+      cp5.getController("tec").setVisible(true);
+
    }
 else
     {
     cp5.getController("set3s").setVisible(true);
     cp5.getController("set3l").setVisible(true);
-    }
+    cp5.getController("sec").setVisible(false);
+    cp5.getController("tec").setVisible(false);
+  }
 }
 
 public void set3s ()
@@ -720,12 +809,16 @@ if(true==cp5.getController("set4s").isVisible())
    {
       cp5.getController("set4s").setVisible(false);
       cp5.getController("set4l").setVisible(false);
+      cp5.getController("sec").setVisible(true);
+      cp5.getController("tec").setVisible(true);
    }
 else
     {
     cp5.getController("set4s").setVisible(true);
     cp5.getController("set4l").setVisible(true);
-    }
+    cp5.getController("sec").setVisible(false);
+    cp5.getController("tec").setVisible(false);
+  }
 }
 
 public void set4s ()
@@ -760,6 +853,8 @@ cp5.getController("claw").setUpdate(true);
 cp5.getController("claw").setValue(claw);
 }
 
+
+
 // mouse wheel slider bewegen
 public void addMouseWheelListener() {
   frame.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
@@ -769,7 +864,7 @@ public void addMouseWheelListener() {
   }
   );
 }
-  public void settings() {  size(600,800); }
+  public void settings() {  size(600,400); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "robot_arm_remake_6df_0_02_pde" };
     if (passedArgs != null) {
