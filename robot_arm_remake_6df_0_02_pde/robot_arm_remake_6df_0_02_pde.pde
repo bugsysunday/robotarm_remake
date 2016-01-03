@@ -25,7 +25,7 @@ Textarea myTextarea;
 String groundinput, secinput, tecinput, aboveinput, topinput, clawinput, smoothinput;
 
 int myColorBackground = color(0,0,0);
-
+int visabove =30;
 //move smooth
 int smomov=15;
 int ground =90;
@@ -93,7 +93,7 @@ PFont fontinput = createFont("arial",14);
   cp5.addButton("set4l").setPosition(85,150).setLabel("load").setSize(40,20).setVisible(false);
 
   cp5.addButton("setmov").setPosition(5,60).setLabel("setmove").setSize(40,30);
-  cp5.addSlider("smomov").setRange(0,100).setLabel("smooth steps").setValue(smomov).setPosition(45,60).setSize(255, 30).setVisible(false).getTriggerEvent();    
+  cp5.addSlider("smomov").setRange(0,100).setLabel("smooth steps").setValue(smomov).setPosition(45,60).setSize(100, 30).setVisible(false).getTriggerEvent();    
 
   
   cp5.addSlider("ground").setRange(154,40).setValue(ground).setNumberOfTickMarks(180).setPosition(75,365).setSize(470,30).getTriggerEvent();  
@@ -608,13 +608,17 @@ if(true==cp5.getController("smomov").isVisible())
       cp5.getController("smomov").setVisible(false);
             cp5.getController("sec").setVisible(true);
       cp5.getController("tec").setVisible(true);
-
+ 
+ 
+ 
    }
 else
     {
     cp5.getController("smomov").setVisible(true);
-      cp5.getController("sec").setVisible(false);
-      cp5.getController("tec").setVisible(false);
+    cp5.getController("sec").setVisible(false);
+    cp5.getController("tec").setVisible(false);
+   
+ 
 
   }
 println("Smooth steps changed to " +smomov);
